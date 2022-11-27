@@ -1,0 +1,72 @@
+.todo_add {
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.todo_add header {
+  text-align: center;
+  width: 100%;
+}
+
+.todo_create {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.todo_create .todo_create-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.todo_create .todo_create-files {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.todo_create .todo_create-files .todo_create-files_files {
+  display: flex;
+  align-items: flex-end;
+}
+.todo_create .todo_create-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.todo_create label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.todo_create .expired {
+  display: flex;
+  gap: 10px;
+}
+.todo_create .expired input {
+  width: 50%;
+}
+.todo_create .error {
+  color: #ff5930;
+}
+.todo_create .todo_file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+  z-index: -10;
+}
+.todo_create .todo_file-input + span {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.todo_create .todo_file-input:focus + span {
+  outline: 1px auto;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+.todo_create .todo_create-button {
+  width: 100px;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=index.css.map */

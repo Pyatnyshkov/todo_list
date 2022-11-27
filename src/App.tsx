@@ -1,26 +1,114 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { ITodo } from "./model/todo";
+import { db } from "./firebase";
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  doc,
+  query,
+  onSnapshot
+} from "firebase/firestore";
+import Todo from "./components/Todo";
+import Create from "./components/Create";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [todos, setTodos] = useState<ITodo[]>([] as ITodo[]);
+
+  useEffect(() => {
+    const q = query(collection(db, "todos"));
+    const unsub = onSnapshot(q, querySnapshot => {
+      let todos = [] as ITodo[];
+      querySnapshot.forEach(elem => {
+        todos.push({ ...(elem.data() as ITodo), id: elem.id });
+      });
+      setTodos(todos);
+    });
+    return () => unsub();
+  }, []);
+
+  const addTodo = async (todo: ITodo) => {
+    await addDoc(collection(db, "todos"), todo);
+  };
+
+  const removeTodo = async (id: string) => {
+    await deleteDoc(doc(db, 'todos', id));
+  };
+
+  const editTodo = async (todo: ITodo) => {
+    await updateDoc(doc(db, 'todos', todo.id), todo);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <>
+      <header className="app_header">
+        <h1>Список задач</h1>
+        <h3>
+          Создание, редактирование, удаление задач. <br /> Отслеживание срока
+          завершения задачи.
+        </h3>
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          Задачи доступны всем участникам команды и обновляются в режиме
+          реального времени на всех устройствах.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
-    </div>
+      <Create addTodo={addTodo} id={todos.length + 1} />
+      <section className="todo_created">
+        {todos.filter((todo: ITodo) => !todo.completed).length ? (
+          <>
+            <header>
+              <h3>
+                Текущие задачи{" "}
+                <span className="todo_tip">
+                  (Красным помечены задачи с истекшим сроком выполнения)
+                </span>
+              </h3>{" "}
+            </header>
+            <article className="todo_list">
+              {todos
+                .filter((todo: ITodo) => !todo.completed)
+                .map((todo: ITodo) => (
+                  <Todo
+                    todoElem={todo}
+                    removeTodo={removeTodo}
+                    editTodo={editTodo}
+                    key={todo.id}
+                  />
+                ))}
+            </article>
+          </>
+        ) : (
+          <p>Нет открытых задач</p>
+        )}
+      </section>
+      {todos.filter((todo: ITodo) => todo.completed).length ? (
+        <section className="todo_completed">
+          <header>
+            <h3>
+              Выполненные задачи{" "}
+              <span className="todo_tip">
+                (Вы можете открыть задачу заново)
+              </span>
+            </h3>
+          </header>
+          <article className="todo_list">
+            {todos
+              .filter((todo: ITodo) => todo.completed)
+              .map((todo: ITodo) => (
+                <Todo
+                  todoElem={todo}
+                  removeTodo={removeTodo}
+                  editTodo={editTodo}
+                  key={todo.id}
+                />
+              ))}
+          </article>
+        </section>
+      ) : null}
+    </>
   );
-}
+};
 
 export default App;

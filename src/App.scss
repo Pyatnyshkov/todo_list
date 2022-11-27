@@ -1,3 +1,5 @@
+$header-background: #d6f5f9;
+
 body {
   margin: 0;
 }
@@ -6,13 +8,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #d6f5f9;
-}
-.app_header h3 {
-  text-align: center;
-}
-.app_header p {
-  text-align: center;
+  background-color: $header-background;
+  h3 {
+    text-align: center;
+  }
+  p {
+    text-align: center;
+  }
 }
 
 section {
@@ -34,4 +36,5 @@ input {
   padding: 5px;
 }
 
-/*# sourceMappingURL=App.css.map */
+
+

@@ -1,0 +1,59 @@
+$todo-border-color: #1ebceb;
+
+.todo {
+  border: 1px solid $todo-border-color;
+  border-radius: 10px;
+  padding: 0 10px 10px;
+}
+
+.todo_header {
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+  align-items: center;
+  border-bottom: 1px solid $todo-border-color;
+}
+
+.todo_delete {
+  border: none;
+  cursor: pointer;
+  background-image: url("../../img/cross.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+}
+
+.todo_desc {
+  margin: 10px 0;
+  min-height: 40px;
+  max-width: 300px;
+}
+
+.todo_expire {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+  input {
+    width: 50%;
+  }
+}
+
+.todo_control {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid $todo-border-color;
+  padding-top: 10px;
+}
+
+.todo_files-title {
+  display: block;
+  margin: 10px 0;
+}
+
+.todo_files-files {
+  display: flex;
+  align-items: flex-end;
+}
