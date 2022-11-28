@@ -1,46 +1,39 @@
-# Getting Started with Create React App
+# Todo list
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Сервис постановки и отслеживания задач
 
-## Available Scripts
+## Функционал
 
-In the project directory, you can run:
+Используя приложение Вы можете:
 
-### `npm start`
+### Создать задачу
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Введите название задачи, описание, срок исполнения. Вы также можете прикрепить к задаче файлы (в настоящий момент только .png, .jpeg)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Редактировать задачу
 
-### `npm test`
+Можно изменить любое поле в задаче, поменять или удалить прикрепленные файлы.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Завершить задачу
 
-### `npm run build`
+По завершению задача не исчезает, а попадает в список завершенных, откуда ее можно восстановить и редактировать.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Инструменты
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Приложение написано на Typescript с помощью [Create React App](https://github.com/facebook/create-react-app), база данных [Firebase](firebase.google.com), запросы нативными методами Firebase
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### dayjs
 
-### `npm run eject`
+Работа с датами 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Sass 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Препроцессор для работы со стилями
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Документация
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Код откомментирован с помощью инструмента JSDoc.
 
-## Learn More
+## Хостинг
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Хостинг клиентской части на [Firebase](firebase.google.com)
