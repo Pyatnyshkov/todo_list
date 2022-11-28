@@ -1,9 +1,11 @@
 import React, { FC, useState, useEffect } from "react";
 import { ITodo } from "../../model/todo";
-
-import "./index.css";
 import dayjs from "dayjs";
+
 import Attachment from "../Attachment";
+import DateInput from "../Date";
+import AddFiles from "../AddFiles";
+import "./index.css";
 
 type Props = {
   addTodo: (todo: ITodo) => void;
@@ -12,48 +14,22 @@ type Props = {
 const Create: FC<Props> = ({ addTodo, id }) => {
   const [todo, setTodo] = useState<ITodo>(({
     id,
-    expired: new Date(),
+    expired: dayjs(new Date()).toISOString(),
     files: []
   } as unknown) as ITodo);
   const [newTodo, setNewTodo] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
+  const handleInput = ({
+    name,
+    value
+  }: {
+    name: string;
+    value: string;
+  }): void => {
     if (name === "title") {
       setError(false);
     }
     setTodo(prevTodo => ({ ...prevTodo, [name]: value }));
-  };
-  const handleDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target.value);
-    // setTodo(prevTodo => ({ ...prevTodo, expired: date }));
-  };
-  const handleFile = (e: React.FormEvent<HTMLInputElement>): void => {
-    if (e.currentTarget.files) {
-      let newFiles: string[] = todo.files;
-      const files = e.currentTarget.files;
-      const reader = new FileReader();
-      const readFile = (index: number) => {
-        if (index < files.length) {
-          const file = files[index];
-          reader.readAsDataURL(file);
-          reader.onload = event => {
-            if (event.target) {
-              const dataURL = event.target.result;
-              if (typeof dataURL === "string") {
-                newFiles.push(dataURL);
-              }
-            }
-            setTodo(prevTodo => ({
-              ...prevTodo,
-              files: newFiles
-            }));
-            readFile(index + 1);
-          };
-        }
-      };
-      readFile(0);
-    }
   };
 
   useEffect(() => {
@@ -67,7 +43,7 @@ const Create: FC<Props> = ({ addTodo, id }) => {
 
   const handleAdd = () => {
     if (todo.title) {
-      addTodo(todo);
+      addTodo({ ...todo, completed: false });
       setNewTodo(false);
     } else {
       setError(true);
@@ -104,7 +80,11 @@ const Create: FC<Props> = ({ addTodo, id }) => {
             <input
               type="text"
               name="title"
-              onChange={handleInput}
+              onChange={({
+                target: { name, value }
+              }: React.ChangeEvent<HTMLInputElement>) =>
+                handleInput({ name, value })
+              }
               defaultValue={todo.title}
             />
             {error && <span className="error">Введите название</span>}
@@ -112,18 +92,7 @@ const Create: FC<Props> = ({ addTodo, id }) => {
           <label>
             <span>Дата завершения</span>
             <div className="expired">
-              <input
-                type="text"
-                name="exp_date"
-                onChange={handleDate}
-                defaultValue={dayjs(todo.expired).format("DD-MM-YYYY")}
-              />
-              <input
-                type="text"
-                name="exp_time"
-                onChange={handleDate}
-                defaultValue={dayjs(todo.expired).format("HH-mm")}
-              />
+              <DateInput handleDate={handleInput} todo={todo} />
             </div>
           </label>
           <label>
@@ -131,20 +100,15 @@ const Create: FC<Props> = ({ addTodo, id }) => {
             <input
               type="text"
               name="description"
-              onChange={handleInput}
+              onChange={({
+                target: { name, value }
+              }: React.ChangeEvent<HTMLInputElement>) =>
+                handleInput({ name, value })
+              }
               defaultValue={todo.description}
             />
           </label>
-          <label>
-            <input
-              className="todo_file-input"
-              type="file"
-              onInput={handleFile}
-              multiple
-              accept=".jpg,.png"
-            />
-            <span>Выберите файл (.jpg,.png)</span>
-          </label>
+          <AddFiles todo={todo} setTodo={setTodo} />
         </div>
         <div className="todo_create-files">
           {todo.files.length ? (

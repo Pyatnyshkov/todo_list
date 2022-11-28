@@ -1,9 +1,29 @@
 $todo-border-color: #1ebceb;
+$todo-border-color_expired: #f05858;
 
 .todo {
   border: 1px solid $todo-border-color;
   border-radius: 10px;
   padding: 0 10px 10px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .todo_cont {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  &.expired {
+    border-color: $todo-border-color_expired;
+    .todo_header {
+      border-color: $todo-border-color_expired;
+    }
+    .todo_control {
+      border-color: $todo-border-color_expired;
+    }
+  }
 }
 
 .todo_header {
@@ -29,6 +49,10 @@ $todo-border-color: #1ebceb;
   margin: 10px 0;
   min-height: 40px;
   max-width: 300px;
+  input {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 .todo_expire {

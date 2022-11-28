@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import { ITodo } from "../../model/todo";
 import "./index.css";
 import Attachment from "../Attachment";
+import DateInput from "../Date";
+import AddFiles from "../AddFiles";
 
 type Props = {
   todoElem: ITodo;
@@ -14,22 +16,29 @@ const Todo: FC<Props> = ({ todoElem, removeTodo, editTodo }) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [todo, setTodo] = useState<ITodo>(todoElem);
 
-  const handleEdit = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value } = e.target;
+  const handleEdit = ({
+    name,
+    value
+  }: {
+    name: string;
+    value: string;
+  }): void => {
     setTodo(prevState => ({
       ...prevState,
       [name]: value
     }));
   };
+
   const handleComplete = (): void => {
     setTodo(prevState => ({
       ...prevState,
       completed: !prevState.completed
     }));
+    editTodo({ ...todo, completed: !todo.completed });
   };
 
   const removeFile = (file: string) => {
-    const files = todoElem.files.filter(f => f !== file);
+    const files = todo.files.filter(f => f !== file);
     setTodo(prevState => ({
       ...prevState,
       files
@@ -37,7 +46,7 @@ const Todo: FC<Props> = ({ todoElem, removeTodo, editTodo }) => {
   };
 
   const getFiles = () =>
-    todoElem.files.map((file: string, i) => (
+    todo.files.map((file: string, i) => (
       <Attachment
         key={i}
         editing={editing}
@@ -47,13 +56,21 @@ const Todo: FC<Props> = ({ todoElem, removeTodo, editTodo }) => {
     ));
 
   return (
-    <div className={`todo`}>
+    <div
+      className={`todo ${
+        !todo.completed && dayjs(todo.expired) < dayjs(new Date()) ? "expired" : ""
+      }`}
+    >
       <div className="todo_header">
         {editing ? (
           <input
             type="text"
             name="title"
-            onChange={handleEdit}
+            onChange={({
+              target: { name, value }
+            }: React.ChangeEvent<HTMLInputElement>) =>
+              handleEdit({ name, value })
+            }
             defaultValue={todoElem.title}
             className="todo_input"
             placeholder="Заголовок"
@@ -66,47 +83,41 @@ const Todo: FC<Props> = ({ todoElem, removeTodo, editTodo }) => {
           className="todo_delete"
         />
       </div>
-      {editing ? (
-        <div className="todo_desc">
-          <input
-            name="description"
-            type="text"
-            onChange={handleEdit}
-            defaultValue={todoElem.description}
-            placeholder="Описание"
-          />
-        </div>
-      ) : todoElem.description ? (
-        <div className="todo_desc">{`Описание: ${todoElem.description}`}</div>
-      ) : null}
-      <div className="todo_expire">
+      <div className="todo_cont">
         {editing ? (
-          <>
+          <div className="todo_desc">
             <input
+              name="description"
               type="text"
-              className="expire_date"
-              placeholder="Дата"
-              defaultValue={dayjs(new Date()).format("DD-MM-YYYY")}
+              onChange={({
+                target: { name, value }
+              }: React.ChangeEvent<HTMLInputElement>) =>
+                handleEdit({ name, value })
+              }
+              defaultValue={todoElem.description}
+              placeholder="Описание"
             />
-            <input
-              type="text"
-              className="expire_time"
-              placeholder="Время"
-              defaultValue={dayjs(new Date()).format("HH-mm")}
-            />
-          </>
-        ) : (
-          `Срок выполнения: ${dayjs(todoElem.expired).format(
-            "DD-MM-YYYY HH-mm"
-          )}`
-        )}
+          </div>
+        ) : todoElem.description ? (
+          <div className="todo_desc">{`Описание: ${todoElem.description}`}</div>
+        ) : null}
+        <div className="todo_expire">
+          {editing ? (
+            <DateInput handleDate={handleEdit} todo={todo} />
+          ) : (
+            `Срок выполнения: ${dayjs(todoElem.expired).format(
+              "DD.MM.YYYY HH:mm"
+            )}`
+          )}
+        </div>
+        {todo.files.length ? (
+          <div className="todo_files">
+            <span className="todo_files-title">Прикрепленные файлы:</span>
+            <div className="todo_files-files">{getFiles()}</div>
+          </div>
+        ) : null}
+        {editing ? <AddFiles setTodo={setTodo} todo={todo} /> : null}
       </div>
-      {todoElem.files ? (
-        <>
-          <span className="todo_files-title">Прикрепленные файлы:</span>
-          <div className="todo_files-files">{getFiles()}</div>
-        </>
-      ) : null}
       <div className="todo_control">
         {editing ? (
           <button
