@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState } from "react";
 import { ITodo } from "../../model/todo";
 import dayjs from "dayjs";
 
@@ -9,11 +9,9 @@ import "./index.css";
 
 type Props = {
   addTodo: (todo: ITodo) => void;
-  id: number;
 };
-const Create: FC<Props> = ({ addTodo, id }) => {
+const Create: FC<Props> = ({ addTodo }) => {
   const [todo, setTodo] = useState<ITodo>(({
-    id,
     expired: dayjs(new Date()).toISOString(),
     files: []
   } as unknown) as ITodo);
@@ -32,19 +30,16 @@ const Create: FC<Props> = ({ addTodo, id }) => {
     setTodo(prevTodo => ({ ...prevTodo, [name]: value }));
   };
 
-  useEffect(() => {
-    return () =>
-      setTodo((({
-        id,
-        expired: new Date(),
-        files: []
-      } as unknown) as ITodo) as ITodo);
-  }, [id]);
-
   const handleAdd = () => {
     if (todo.title) {
       addTodo({ ...todo, completed: false });
       setNewTodo(false);
+      setTodo(({
+        title: "",
+        description: "",
+        expired: dayjs(new Date()).toISOString(),
+        files: []
+      } as unknown) as ITodo);
     } else {
       setError(true);
     }
@@ -109,6 +104,17 @@ const Create: FC<Props> = ({ addTodo, id }) => {
             />
           </label>
           <AddFiles todo={todo} setTodo={setTodo} />
+          <div className="todo_create-control">
+            <button
+              className="todo_create-button"
+              onClick={() => setNewTodo(false)}
+            >
+              Отменить
+            </button>
+            <button className="todo_create-button" onClick={handleAdd}>
+              Добавить
+            </button>
+          </div>
         </div>
         <div className="todo_create-files">
           {todo.files.length ? (
@@ -119,9 +125,7 @@ const Create: FC<Props> = ({ addTodo, id }) => {
           ) : null}
         </div>
       </div>
-      <button className="todo_create-button" onClick={handleAdd}>
-        Добавить
-      </button>
+
     </section>
   );
 };

@@ -16,6 +16,12 @@
   flex-direction: column;
   gap: 10px;
 
+  .todo_create-control {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
   .todo_create-blocks {
     display: flex;
     flex-wrap: wrap;

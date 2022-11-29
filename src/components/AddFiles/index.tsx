@@ -1,4 +1,3 @@
-// @flow
 import React, { Dispatch, SetStateAction } from "react";
 import { ITodo } from "../../model/todo";
 

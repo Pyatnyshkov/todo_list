@@ -57,7 +57,7 @@ const App = () => {
         <section>Загрузка</section>
       ) : (
         <>
-          <Create addTodo={addTodo} id={todos.length + 1} />
+          <Create addTodo={addTodo} />
           <section className="todo_created">
             {todos.filter((todo: ITodo) => !todo.completed).length ? (
               <>
